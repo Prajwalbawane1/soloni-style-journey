@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ShoppingBag, Search, Menu, X } from "lucide-react";
+import { ShoppingBag, Search, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -64,6 +64,13 @@ const Navbar = () => {
               0
             </span>
           </button>
+          <Link 
+            to="/profile" 
+            aria-label="Profile" 
+            className="p-2 hover:text-soloni-gold transition-colors"
+          >
+            <User size={20} />
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -119,6 +126,14 @@ const Navbar = () => {
                   0
                 </span>
               </button>
+              <Link 
+                to="/profile" 
+                aria-label="Profile" 
+                className="p-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <User size={20} />
+              </Link>
             </div>
           </div>
         </div>
