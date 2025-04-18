@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -15,8 +14,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import ForgotPassword from "./pages/ForgotPassword";
+import Checkout from "./pages/Checkout";
 
-// Initialize the query client outside the component to avoid re-creation on renders
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -37,6 +36,7 @@ const App = () => {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>

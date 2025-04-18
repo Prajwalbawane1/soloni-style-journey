@@ -1,14 +1,26 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Product } from "@/types";
-import { ShoppingBag, Heart } from "lucide-react";
+import { ShoppingBag, Heart, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleBuyNow = async (product: Product) => {
+    setIsLoading(true);
+    // Store the selected product in localStorage for the checkout page
+    localStorage.setItem("buyNowProduct", JSON.stringify(product));
+    navigate("/checkout");
+    setIsLoading(false);
+  };
+
   return (
     <div className="product-card group rounded-lg overflow-hidden bg-white">
       <div className="relative overflow-hidden">
@@ -58,6 +70,28 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <span className="ml-2 text-gray-500 text-sm">
             ({product.reviews} {product.reviews === 1 ? "review" : "reviews"})
           </span>
+        </div>
+        <div className="mt-4 flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1 border-soloni-gold text-soloni-gold hover:bg-soloni-gold hover:text-white"
+          >
+            <ShoppingBag className="mr-2 h-4 w-4" />
+            Add to Cart
+          </Button>
+          <Button
+            size="sm"
+            className="flex-1 bg-soloni-gold hover:bg-soloni-gold/90"
+            onClick={() => handleBuyNow(product)}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Buy Now"
+            )}
+          </Button>
         </div>
       </div>
     </div>
