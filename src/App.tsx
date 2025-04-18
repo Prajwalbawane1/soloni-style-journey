@@ -10,6 +10,10 @@ import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +29,10 @@ const App = () => (
             <Route path="/shop" element={<Shop />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/about" element={<About />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
