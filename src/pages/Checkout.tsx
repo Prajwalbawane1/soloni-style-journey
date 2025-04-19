@@ -48,6 +48,16 @@ const Checkout = () => {
     setQuantity(value);
   };
 
+  const handleProceedToPayment = () => {
+    const orderDetails = {
+      product,
+      quantity: Number(quantity),
+      shippingAddress
+    };
+    localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
+    navigate("/payment");
+  };
+
   if (!product) return null;
 
   const totalPrice = Number(quantity) * product.price;
@@ -181,6 +191,7 @@ const Checkout = () => {
 
                 <Button 
                   className="w-full bg-soloni-gold hover:bg-soloni-gold/90"
+                  onClick={handleProceedToPayment}
                 >
                   <CreditCard className="mr-2 h-4 w-4" />
                   Proceed to Payment
