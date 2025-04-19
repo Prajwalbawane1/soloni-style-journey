@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Product } from "@/types";
@@ -7,10 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MapPin, CreditCard, Truck } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Checkout = () => {
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
+  const [quantity, setQuantity] = useState("1");
   const [shippingAddress, setShippingAddress] = useState({
     fullName: "",
     streetAddress: "",
@@ -19,6 +26,14 @@ const Checkout = () => {
     zipCode: "",
     country: "",
   });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setShippingAddress((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   useEffect(() => {
     const storedProduct = localStorage.getItem("buyNowProduct");
@@ -29,15 +44,13 @@ const Checkout = () => {
     setProduct(JSON.parse(storedProduct));
   }, [navigate]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setShippingAddress((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleQuantityChange = (value: string) => {
+    setQuantity(value);
   };
 
   if (!product) return null;
+
+  const totalPrice = Number(quantity) * product.price;
 
   return (
     <div className="container mx-auto px-4 py-24">
@@ -128,16 +141,33 @@ const Checkout = () => {
                     alt={product.name}
                     className="w-20 h-20 object-cover rounded"
                   />
-                  <div>
+                  <div className="flex-1">
                     <h3 className="font-medium">{product.name}</h3>
-                    <p className="text-gray-500 text-sm">Quantity: 1</p>
+                    <div className="flex items-center gap-4 mt-2">
+                      <Label htmlFor="quantity">Quantity:</Label>
+                      <Select
+                        value={quantity}
+                        onValueChange={handleQuantityChange}
+                      >
+                        <SelectTrigger className="w-24">
+                          <SelectValue placeholder="Select quantity" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {[1, 2, 3, 4, 5].map((num) => (
+                            <SelectItem key={num} value={num.toString()}>
+                              {num}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
 
                 <div className="border-t pt-4">
                   <div className="flex justify-between mb-2">
                     <span>Subtotal</span>
-                    <span>${product.price.toFixed(2)}</span>
+                    <span>${totalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between mb-2">
                     <span>Shipping</span>
@@ -145,7 +175,7 @@ const Checkout = () => {
                   </div>
                   <div className="flex justify-between font-medium text-lg border-t pt-2">
                     <span>Total</span>
-                    <span>${product.price.toFixed(2)}</span>
+                    <span>${totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
 
