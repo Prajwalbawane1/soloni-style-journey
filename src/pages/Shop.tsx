@@ -13,6 +13,9 @@ import {
   PaginationPrevious 
 } from "@/components/ui/pagination";
 
+// Define SortOption type to match ProductSort.tsx
+type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'popular';
+
 const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
@@ -20,7 +23,7 @@ const Shop = () => {
   const [priceRange, setPriceRange] = useState([0, 300]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<string>("newest");
+  const [sortBy, setSortBy] = useState<SortOption>("newest"); // Changed from string to SortOption
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 9;
 

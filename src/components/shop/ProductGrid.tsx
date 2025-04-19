@@ -5,11 +5,14 @@ import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import ProductSort from "@/components/shop/ProductSort";
 
+// Import the SortOption type from ProductSort
+type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'popular';
+
 interface ProductGridProps {
   products: Product[];
   clearFilters: () => void;
-  sortBy: string;
-  setSortBy: (option: any) => void;
+  sortBy: SortOption; // Changed from string to SortOption
+  setSortBy: (option: SortOption) => void; // Updated parameter type
 }
 
 const ProductGrid = ({ products, clearFilters, sortBy, setSortBy }: ProductGridProps) => {
