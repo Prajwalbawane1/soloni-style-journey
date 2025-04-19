@@ -12,6 +12,8 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from "@/components/ui/pagination";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 // Define SortOption type to match ProductSort.tsx
 type SortOption = 'newest' | 'price-asc' | 'price-desc' | 'popular';
@@ -83,9 +85,37 @@ const Shop = () => {
     setCurrentPage(1);
   };
 
+  const removeFilter = (type: string, value?: string) => {
+    switch (type) {
+      case 'category':
+        setSelectedCategory("All");
+        break;
+      case 'color':
+        if (value) {
+          setSelectedColors(prev => prev.filter(color => color !== value));
+        }
+        break;
+      case 'material':
+        if (value) {
+          setSelectedMaterials(prev => prev.filter(material => material !== value));
+        }
+        break;
+      case 'search':
+        setSearchQuery("");
+        break;
+      default:
+        break;
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [currentPage]);
+
+  useEffect(() => {
+    // Reset to page 1 when filters change
+    setCurrentPage(1);
+  }, [selectedCategory, selectedColors, selectedMaterials, priceRange, searchQuery, sortBy]);
 
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {
@@ -93,6 +123,14 @@ const Shop = () => {
       window.scrollTo(0, 0);
     }
   };
+
+  // Check if any filters are active
+  const hasActiveFilters = selectedCategory !== "All" || 
+                          selectedColors.length > 0 || 
+                          selectedMaterials.length > 0 || 
+                          priceRange[0] > 0 || 
+                          priceRange[1] < 300 ||
+                          searchQuery !== "";
 
   return (
     <div className="pt-24 pb-16">
@@ -109,6 +147,60 @@ const Shop = () => {
           setSearchQuery={setSearchQuery}
           setIsFilterOpen={setIsFilterOpen}
         />
+
+        {/* Active Filters */}
+        {hasActiveFilters && (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="text-sm text-gray-500 mr-2">Active filters:</span>
+            
+            {selectedCategory !== "All" && (
+              <Badge variant="outline" className="flex items-center gap-1 px-3 py-1">
+                Category: {selectedCategory}
+                <button onClick={() => removeFilter('category')} className="ml-1">
+                  <X size={14} />
+                </button>
+              </Badge>
+            )}
+            
+            {selectedColors.map(color => (
+              <Badge key={color} variant="outline" className="flex items-center gap-1 px-3 py-1">
+                Color: {color}
+                <button onClick={() => removeFilter('color', color)} className="ml-1">
+                  <X size={14} />
+                </button>
+              </Badge>
+            ))}
+            
+            {selectedMaterials.map(material => (
+              <Badge key={material} variant="outline" className="flex items-center gap-1 px-3 py-1">
+                Material: {material}
+                <button onClick={() => removeFilter('material', material)} className="ml-1">
+                  <X size={14} />
+                </button>
+              </Badge>
+            ))}
+            
+            {searchQuery && (
+              <Badge variant="outline" className="flex items-center gap-1 px-3 py-1">
+                Search: {searchQuery}
+                <button onClick={() => removeFilter('search')} className="ml-1">
+                  <X size={14} />
+                </button>
+              </Badge>
+            )}
+
+            {hasActiveFilters && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={clearFilters} 
+                className="text-red-500 text-sm hover:text-red-700"
+              >
+                Clear all
+              </Button>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-col lg:flex-row gap-8">
           <FilterSidebar
