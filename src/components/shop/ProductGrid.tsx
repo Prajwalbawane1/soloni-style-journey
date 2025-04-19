@@ -3,28 +3,23 @@ import React from 'react';
 import { Product } from "@/types";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
+import ProductSort from "@/components/shop/ProductSort";
 
 interface ProductGridProps {
   products: Product[];
   clearFilters: () => void;
+  sortBy: string;
+  setSortBy: (option: any) => void;
 }
 
-const ProductGrid = ({ products, clearFilters }: ProductGridProps) => {
+const ProductGrid = ({ products, clearFilters, sortBy, setSortBy }: ProductGridProps) => {
   return (
     <div className="lg:w-3/4">
       <div className="mb-6 flex justify-between items-center">
         <p className="text-gray-600">
           Showing {products.length} {products.length === 1 ? "product" : "products"}
         </p>
-        <div className="flex items-center">
-          <span className="mr-2 text-gray-600">Sort by:</span>
-          <select className="border border-gray-200 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-soloni-gold/50">
-            <option>Newest</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
-            <option>Most Popular</option>
-          </select>
-        </div>
+        <ProductSort sortBy={sortBy} setSortBy={setSortBy} />
       </div>
 
       {products.length > 0 ? (
