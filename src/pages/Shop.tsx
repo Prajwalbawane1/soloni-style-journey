@@ -4,6 +4,7 @@ import { allProducts } from "@/data/products";
 import FilterSidebar from "@/components/shop/FilterSidebar";
 import ProductGrid from "@/components/shop/ProductGrid";
 import MobileSearch from "@/components/shop/MobileSearch";
+import { Button } from "@/components/ui/button"; // Add this import
 import { 
   Pagination, 
   PaginationContent, 
