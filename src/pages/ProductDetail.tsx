@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getProductById, featuredProducts } from "@/data/products";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShoppingBag, Heart, ArrowLeft, Star, Truck, Shield, RefreshCw, ChevronRight } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+import ReviewsList from "@/components/reviews/ReviewsList";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -41,6 +41,24 @@ const ProductDetail = () => {
       setQuantity(quantity - 1);
     }
   };
+
+  // Mock reviews data - in a real app, this would come from an API
+  const mockReviews = [
+    {
+      id: 1,
+      author: "Sarah Johnson",
+      rating: 5,
+      comment: "Beautiful bag! The quality is exceptional and it's exactly as pictured. Perfect size for daily use.",
+      date: "2024-04-15"
+    },
+    {
+      id: 2,
+      author: "Michael Chen",
+      rating: 4,
+      comment: "Great bag overall. The leather is soft and the color is beautiful. Only giving 4 stars because the zipper can be a bit stiff.",
+      date: "2024-04-10"
+    }
+  ];
 
   return (
     <div className="pt-24 pb-16">
@@ -251,11 +269,13 @@ const ProductDetail = () => {
         {/* Product Details Tabs */}
         <div className="mt-16">
           <Tabs defaultValue="details">
-            <TabsList className="grid w-full grid-cols-3 mb-6">
+            <TabsList className="grid w-full grid-cols-4 mb-6">
               <TabsTrigger value="details">Product Details</TabsTrigger>
               <TabsTrigger value="materials">Materials & Care</TabsTrigger>
               <TabsTrigger value="shipping">Shipping & Returns</TabsTrigger>
+              <TabsTrigger value="reviews">Reviews ({product.reviews})</TabsTrigger>
             </TabsList>
+
             <TabsContent value="details" className="p-6 bg-white rounded-lg shadow-sm">
               <h3 className="text-xl font-playfair font-semibold mb-4">Product Details</h3>
               <p className="text-gray-700 mb-4">
@@ -268,6 +288,7 @@ const ProductDetail = () => {
                 With its timeless design and premium materials, the {product.name} is more than just an accessory – it's an investment piece that will elevate your wardrobe for years to come.
               </p>
             </TabsContent>
+
             <TabsContent value="materials" className="p-6 bg-white rounded-lg shadow-sm">
               <h3 className="text-xl font-playfair font-semibold mb-4">Materials & Care</h3>
               <div className="mb-6">
@@ -291,6 +312,7 @@ const ProductDetail = () => {
                 </ul>
               </div>
             </TabsContent>
+
             <TabsContent value="shipping" className="p-6 bg-white rounded-lg shadow-sm">
               <h3 className="text-xl font-playfair font-semibold mb-4">Shipping & Returns</h3>
               <div className="mb-6">
@@ -312,6 +334,33 @@ const ProductDetail = () => {
                   <li>Return shipping fee of $9.99 for orders under $100</li>
                   <li>Exchanges are processed free of charge</li>
                 </ul>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="reviews" className="space-y-6">
+              <div>
+                <h3 className="text-xl font-playfair font-semibold mb-4">Customer Reviews</h3>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        size={20}
+                        className={`${
+                          i < Math.floor(product.rating)
+                            ? "text-soloni-gold"
+                            : "text-gray-300"
+                        }`}
+                        fill={i < Math.floor(product.rating) ? "currentColor" : "none"}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-lg font-medium">{product.rating} out of 5</p>
+                  <p className="text-gray-600">
+                    Based on {product.reviews} {product.reviews === 1 ? "review" : "reviews"}
+                  </p>
+                </div>
+                <ReviewsList reviews={mockReviews} />
               </div>
             </TabsContent>
           </Tabs>
