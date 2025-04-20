@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Product } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard } from "lucide-react";
+import { CreditCard, ImageOff } from "lucide-react";
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ const Payment = () => {
     quantity: number;
     shippingAddress: any;
   } | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const orderData = localStorage.getItem("orderDetails");
@@ -56,11 +57,18 @@ const Payment = () => {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <img
-                  src={orderDetails.product.image}
-                  alt={orderDetails.product.name}
-                  className="w-20 h-20 object-cover rounded"
-                />
+                {imageError ? (
+                  <div className="w-20 h-20 bg-gray-100 flex items-center justify-center rounded">
+                    <ImageOff className="h-6 w-6 text-gray-400" />
+                  </div>
+                ) : (
+                  <img
+                    src={orderDetails.product.image}
+                    alt={orderDetails.product.name}
+                    className="w-20 h-20 object-cover rounded"
+                    onError={() => setImageError(true)}
+                  />
+                )}
                 <div>
                   <h3 className="font-medium">{orderDetails.product.name}</h3>
                   <p className="text-gray-500">Quantity: {orderDetails.quantity}</p>

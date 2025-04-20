@@ -10,7 +10,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Product } from "@/types";
-import { CreditCard, Truck } from "lucide-react";
+import { CreditCard, Truck, ImageOff } from "lucide-react";
+import { useState } from "react";
 
 interface OrderSummaryProps {
   product: Product;
@@ -26,6 +27,7 @@ const OrderSummary = ({
   onProceedToPayment,
 }: OrderSummaryProps) => {
   const totalPrice = Number(quantity) * product.price;
+  const [imageError, setImageError] = useState(false);
 
   return (
     <Card>
@@ -35,11 +37,18 @@ const OrderSummary = ({
       <CardContent>
         <div className="space-y-4">
           <div className="flex items-center gap-4">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-20 h-20 object-cover rounded"
-            />
+            {imageError ? (
+              <div className="w-20 h-20 bg-gray-100 flex items-center justify-center rounded">
+                <ImageOff className="h-6 w-6 text-gray-400" />
+              </div>
+            ) : (
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-20 h-20 object-cover rounded"
+                onError={() => setImageError(true)}
+              />
+            )}
             <div className="flex-1">
               <h3 className="font-medium">{product.name}</h3>
               <div className="flex items-center gap-4 mt-2">

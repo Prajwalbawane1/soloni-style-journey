@@ -1,7 +1,7 @@
 
 import { Link, useNavigate } from "react-router-dom";
 import { Product } from "@/types";
-import { ShoppingBag, Heart, Loader2, Eye } from "lucide-react";
+import { ShoppingBag, Heart, Loader2, Eye, ImageOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -15,6 +15,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleBuyNow = async (product: Product) => {
     setIsLoading(true);
@@ -59,15 +60,25 @@ const ProductCard = ({ product }: ProductCardProps) => {
   // Simulate view counter
   const viewCount = product.reviews * 3 + Math.floor(Math.random() * 20);
 
+  // Fallback image URL
+  const placeholderImage = "/placeholder.svg";
+
   return (
     <div className="product-card group rounded-lg overflow-hidden bg-white">
       <div className="relative overflow-hidden">
         <Link to={`/product/${product.id}`}>
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          {imageError ? (
+            <div className="w-full h-80 bg-gray-100 flex items-center justify-center">
+              <ImageOff className="h-12 w-12 text-gray-400" />
+            </div>
+          ) : (
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-105"
+              onError={() => setImageError(true)}
+            />
+          )}
         </Link>
         <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
           <div className="flex space-x-2">
