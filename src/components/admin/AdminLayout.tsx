@@ -17,9 +17,15 @@ import {
   ShoppingCart, 
   Settings 
 } from "lucide-react";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 const AdminLayout = () => {
+  const location = useLocation();
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -31,42 +37,42 @@ const AdminLayout = () => {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/admin/dashboard">
+                  <Link to="/admin/dashboard" data-active={isActive('/admin/dashboard')}>
                     <LayoutDashboard />
                     <span>Dashboard</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/admin/products">
+                  <Link to="/admin/products" data-active={isActive('/admin/products')}>
                     <Package />
                     <span>Products</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/admin/orders">
+                  <Link to="/admin/orders" data-active={isActive('/admin/orders')}>
                     <ShoppingCart />
                     <span>Orders</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/admin/users">
+                  <Link to="/admin/users" data-active={isActive('/admin/users')}>
                     <Users />
                     <span>Users</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/admin/settings">
+                  <Link to="/admin/settings" data-active={isActive('/admin/settings')}>
                     <Settings />
                     <span>Settings</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
