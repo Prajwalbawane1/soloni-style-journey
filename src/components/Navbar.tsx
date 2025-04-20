@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ShoppingBag, Search, Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,8 +7,24 @@ import { cn } from "@/lib/utils";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
-  // Change navbar style on scroll
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cart = localStorage.getItem("cart");
+      if (cart) {
+        setCartCount(JSON.parse(cart).length);
+      }
+    };
+
+    // Initial count
+    updateCartCount();
+
+    // Update count when storage changes
+    window.addEventListener("storage", updateCartCount);
+    return () => window.removeEventListener("storage", updateCartCount);
+  }, []);
+
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
       if (window.scrollY > 10) {
@@ -30,14 +45,12 @@ const Navbar = () => {
       )}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        {/* Logo */}
         <Link to="/" className="flex items-center">
           <h1 className="text-2xl font-playfair font-bold text-soloni-green">
             <span className="text-soloni-gold">Soloni</span>Bags
           </h1>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
           <Link to="/" className="nav-link font-medium text-gray-800 hover:text-soloni-gold">
             Home
@@ -53,17 +66,20 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Icons */}
         <div className="hidden md:flex items-center space-x-4">
           <button aria-label="Search" className="p-2 hover:text-soloni-gold transition-colors">
             <Search size={20} />
           </button>
-          <button aria-label="Cart" className="p-2 hover:text-soloni-gold transition-colors relative">
+          <Link 
+            to="/cart" 
+            aria-label="Cart" 
+            className="p-2 hover:text-soloni-gold transition-colors relative"
+          >
             <ShoppingBag size={20} />
             <span className="absolute -top-1 -right-1 bg-soloni-gold text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-              0
+              {cartCount}
             </span>
-          </button>
+          </Link>
           <Link 
             to="/profile" 
             aria-label="Profile" 
@@ -73,7 +89,6 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden p-2"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -83,7 +98,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white border-t shadow-lg animate-slide-in">
           <div className="container mx-auto px-4 py-4 flex flex-col">
@@ -120,12 +134,17 @@ const Navbar = () => {
               <button aria-label="Search" className="p-2">
                 <Search size={20} />
               </button>
-              <button aria-label="Cart" className="p-2 relative">
+              <Link 
+                to="/cart" 
+                aria-label="Cart" 
+                className="p-2 relative"
+                onClick={() => setIsMenuOpen(false)}
+              >
                 <ShoppingBag size={20} />
                 <span className="absolute -top-1 -right-1 bg-soloni-gold text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                  0
+                  {cartCount}
                 </span>
-              </button>
+              </Link>
               <Link 
                 to="/profile" 
                 aria-label="Profile" 
